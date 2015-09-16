@@ -1,21 +1,23 @@
 # -*- coding: utf-8 -*-
 """The app module, containing the app factory function."""
+
+import sys
+import cdecimal
+
+sys.modules["decimal"] = cdecimal
+
 from flask import Flask, render_template
 
-from {{cookiecutter.app_name}}.settings import ProdConfig
-from {{cookiecutter.app_name}}.assets import assets
+from {{cookiecutter.app_name}}.settings import settings
 from {{cookiecutter.app_name}}.extensions import (
     bcrypt,
     cache,
-    db,
     login_manager,
-    migrate,
     debug_toolbar,
 )
-from {{cookiecutter.app_name}} import public, user
 
 
-def create_app(config_object=ProdConfig):
+def create_app(config_object=settings):
     """An application factory, as explained here:
         http://flask.pocoo.org/docs/patterns/appfactories/
 
@@ -30,20 +32,15 @@ def create_app(config_object=ProdConfig):
 
 
 def register_extensions(app):
-    assets.init_app(app)
     bcrypt.init_app(app)
     cache.init_app(app)
-    db.init_app(app)
     login_manager.init_app(app)
     debug_toolbar.init_app(app)
-    migrate.init_app(app, db)
     return None
 
 
 def register_blueprints(app):
-    app.register_blueprint(public.views.blueprint)
-    app.register_blueprint(user.views.blueprint)
-    return None
+    pass
 
 
 def register_errorhandlers(app):
